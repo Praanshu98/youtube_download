@@ -1,43 +1,40 @@
 from pytube import YouTube
+import os
 
-# #where to save
-# SAVE_PATH = "./" #to_do
 
-# #link of the video to be downloaded
-# link=["https://www.youtube.com/watch?v=xWOoBJUqlbI",
-# 	"https://www.youtube.com/watch?v=xWOoBJUqlbI"
-# 	]
+# urls = ["https://www.youtube.com/watch?v=2tTthnmfl7I","https://www.youtube.com/watch?v=OzuHuZ-viRo",
+# "https://www.youtube.com/watch?v=XxmxHdA-VpA", "https://www.youtube.com/watch?v=tkGgnBWfVIA",
+# "https://www.youtube.com/watch?v=CGgcjaqRGtE", "https://www.youtube.com/watch?v=SehiWYrvZho",
+# "https://www.youtube.com/watch?v=C9xg5ZkQsT4"]
 
-# for i in link:
-# 	try:
-		
-# 		# object creation using YouTube
-# 		# which was imported in the beginning
-# 		yt = YouTube(i)
-# 	except:
-		
-# 		#to handle exception
-# 		print("Connection Error")
-	
-# 	#filters out all the files with "mp4" extension
-# 	mp4files = yt.filter('mp4')
-# 	mp4files = yt.filter
+urls = ["https://www.youtube.com/watch?v=MQWNuNRPU6c", "https://www.youtube.com/watch?v=uqAmbKOz_x0"
+,"https://www.youtube.com/watch?v=8AwIJZj07s8", "https://www.youtube.com/watch?v=Zv11L-ZfrSg",
+"https://www.youtube.com/watch?v=LXb3EKWsInQ"]
 
-# 	# get the video with the extension and
-# 	# resolution passed in the get() function
-# 	d_video = yt.get(mp4files[-1].extension,mp4files[-1].resolution)
-# 	try:
-# 		# downloading the video
-# 		d_video.download(SAVE_PATH)
-# 	except:
-# 		print("Some Error!")
-# print('Task Completed!')
 
-URL = ["https://www.youtube.com/watch?v=2tTthnmfl7I"]
+for i in range(len(urls)):
 
-for i in URL:
+	yt = YouTube(urls[i])
 
-	video = YouTube(i)
-	video_streams = video.streams.filter(file_extension='mp4').get_by_itag(137)
-	video_streams.download(filename = "1.mp4",
-		output_path = "video_path")
+	# temp_video = yt.streams.filter(adaptive=True, file_extension="mp4",type="audio", abr="128kbps")
+	# temp_video = yt.streams.filter(adaptive=True, file_extension="mp4",res="1080p",type="video")
+
+	# temp_video = yt.streams.filter(adaptive=True,file_extension="mp4")
+
+	temp_video = yt.streams.get_by_itag(571).download(filename_prefix="Video_", filename=f"{i}.mp4")
+
+	print(temp_video)
+
+	print("-"*50)
+
+	temp_video = yt.streams.get_by_itag(140).download(filename_prefix="Audio_", filename=f"{i}.mp4")
+
+	print(temp_video)
+
+	print("-"*50)
+
+	os.system(f"ffmpeg -i Video_{i}.mp4 -i Audio_{i}.mp4 -c copy output_{i}.mp4")
+
+	os.system(f"scp output_{i}.mp4 192.168.1.104:/Users/praanshu/Desktop/test")
+
+	print("-"*50)
