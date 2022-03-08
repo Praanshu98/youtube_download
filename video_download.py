@@ -1,11 +1,11 @@
 from pytube import YouTube
 
-# urls = ["https://www.youtube.com/watch?v=2tTthnmfl7I","https://www.youtube.com/watch?v=OzuHuZ-viRo",
-# "https://www.youtube.com/watch?v=XxmxHdA-VpA", "https://www.youtube.com/watch?v=tkGgnBWfVIA",
-# "https://www.youtube.com/watch?v=CGgcjaqRGtE", "https://www.youtube.com/watch?v=SehiWYrvZho",
-# "https://www.youtube.com/watch?v=C9xg5ZkQsT4"]
+urls = ["https://www.youtube.com/watch?v=2tTthnmfl7I","https://www.youtube.com/watch?v=OzuHuZ-viRo",
+"https://www.youtube.com/watch?v=XxmxHdA-VpA", "https://www.youtube.com/watch?v=tkGgnBWfVIA",
+"https://www.youtube.com/watch?v=CGgcjaqRGtE", "https://www.youtube.com/watch?v=SehiWYrvZho",
+"https://www.youtube.com/watch?v=C9xg5ZkQsT4"]
 
-urls = ["https://www.youtube.com/watch?v=2tTthnmfl7I"]
+# urls = ["https://www.youtube.com/watch?v=2tTthnmfl7I"]
 
 
 for i in range(len(urls)):
