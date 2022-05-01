@@ -7,7 +7,7 @@ import os
 #"https://www.youtube.com/watch?v=CGgcjaqRGtE", "https://www.youtube.com/watch?v=SehiWYrvZho",
 #"https://www.youtube.com/watch?v=C9xg5ZkQsT4"]
 
-urls = ["https://www.youtube.com/watch?v=zmnUYJf5wW8"]
+urls = ["https://www.youtube.com/watch?v=44ScUdHmZdU"]
 
 
 for i in range(len(urls)):
@@ -29,9 +29,9 @@ for i in range(len(urls)):
 
     print("-"*50)
 
-    os.system(f"ffmpeg -i Video_{i}.mp4 -i Audio_{i}.mp4 -c copy output_{i}.mp4")
+    os.system(f"ffmpeg -i Video_{i}.mp4 -i Audio_{i}.mp4 -c copy Output_{i}.mp4")
 
     print("-"*50)
 
-    os.system(f"scp output_{i}.mp4 192.168.1.101:/Users/praanshu/Desktop")
+    os.system(f"scp Output_{i}.mp4 192.168.1.104:/Users/praanshu/Desktop")
 
