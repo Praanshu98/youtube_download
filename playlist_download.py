@@ -14,6 +14,9 @@ for url in p.video_urls:
     video_name = yt.title
 
     video_name = video_name.replace(" ", "_")
+    video_name = video_name.replace("(", "_")
+    video_name = video_name.replace(")", "_")
+    video_name = video_name.replace("-", "_")
 
     print(video_name)
 
@@ -32,7 +35,7 @@ for url in p.video_urls:
 
     print("-"*50)
 
-    os.system(f"ffmpeg -i Video_{video_name}.mp4 -i Audio_{video_name}.mp4 -c copy output_{video_name}.mp4")
+    os.system(f"ffmpeg -i Video_{video_name}.mp4 -i Audio_{video_name}.mp4 -c copy {video_name}.mp4")
 
     print("-"*50)
 
