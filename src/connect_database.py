@@ -1,3 +1,6 @@
+# This file makes a connection with MySQL Database
+
+
 import mysql.connector
 
 db = mysql.connector.connect(
