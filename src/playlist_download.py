@@ -88,7 +88,7 @@ for url in playlist.video_urls:
 
         downloader()
 
-        # audio_video_merger()
+        audio_video_merger()
 
         
 
