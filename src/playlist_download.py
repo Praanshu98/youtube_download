@@ -14,81 +14,98 @@ logging.basicConfig(filename='logs/example.log', level=logging.DEBUG)
 
 mysql_cursor = connect_database.db.cursor()
 
-playlist = Playlist('https://www.youtube.com/playlist?list=PL9-I-e3B9DhG6x_sVLXbCzUPxI3MDQI7L')
-
-logging.info("-"*100)
-
 def downloader():
 
     video = yt.streams.get_by_itag(137).download(filename_prefix="temp/Video_", filename=f"{video_title}.mp4")
 
     logging.info(f"{video}")
 
-    logging.info("-"*50)
+    logging.info("-"*100)
 
     audio = yt.streams.get_by_itag(140).download(filename_prefix="temp/Audio_", filename=f"{video_title}.mp4")
 
-    logging.info("-"*50)
+    logging.info("-"*100)
 
+def audio_video_merger(title):
+
+    ifdir = os.path.isdir(f"{os.getcwd()}/videos/{title}")
+
+    if ifdir == False:
+        os.system(f"mkdir videos/{title}")
+        print(f"{title} folder created")
     
+    os.system(f"ffmpeg -i temp/Video_{video_title}.mp4 -i temp/Audio_{video_title}.mp4 -c copy videos/{title}/{video_title}.mp4")
 
-def audio_video_merger():
-    
-    os.system(f"ffmpeg -i temp/Video_{video_title}.mp4 -i temp/Audio_{video_title}.mp4 -c copy videos/{video_title}.mp4")
+    os.system(f"rm -rf temp/Audio_* temp/Video_*")
 
-    os.system(f"")
+# Fetching all the urls from playlist_urls table
 
+mysql_cursor.execute("SELECT urls FROM playlist_urls")
+urls = mysql_cursor.fetchall()
 
+logging.info(f"URLs found in DB: {urls}")
 
-for url in playlist.video_urls:
+for url in urls:
 
-    logging.info(f'Downloading: {playlist.title}')
+    playlist = Playlist(url[0])
 
-    logging.info(" Downloading video of : {url}")
+    logging.info("-"*100)
 
-    yt = YouTube(url)
+    logging.info(f'Working on playlist: {playlist.title}')
 
-    video_id=extract.video_id(url)
+    for url in playlist.video_urls:
 
-    mysql_cursor.execute("SELECT video_id FROM youtube_urls")
+        logging.info(f"Working on video of : {url}")
 
-    video_ids = mysql_cursor.fetchall()
+        yt = YouTube(url)
 
-    logging.info(f"Working on ID: {video_id}")
-    
-    # logging.info(f"Video ids stored in DB: {video_ids}")
+        video_id=extract.video_id(url)
 
-    # print("ID: ", video_id)
+        # Fetching all the video_ids previously downloaded from youtube_url table
 
-    # print("Video ID: ", video_ids)
+        mysql_cursor.execute("SELECT video_id FROM youtube_urls")
 
-    
-    for id in video_ids:
-        if video_id == id[0]:
-            logging.info(f"{video_id} found, checking next id")
-            break
-    else:
-        video_title = yt.title
+        video_ids = mysql_cursor.fetchall()
 
-        # change below code, check and replace for all special characters
+        logging.info(f"Working on ID: {video_id}")
+        
+        # logging.info(f"Video ids stored in DB: {video_ids}")
 
-        video_title = re.sub('[^a-zA-Z0-9\n\.]', '', video_title)
+        # print("ID: ", video_id)
 
-        print(video_title)
+        # print("Video ID: ", video_ids)
 
-        # temp_video = yt.streams.filter(adaptive=True, file_extension="mp4",type="audio", abr="128kbps")
-        # temp_video = yt.streams.filter(adaptive=True, file_extension="mp4",res="1080p",type="video")
+        # Checking if the video_id is present in our table.
 
-        qry = "INSERT INTO youtube_urls (playlist_name, video_id, video_name, video_url) VALUES (%s, %s, %s, %s)"
-        val = (f"{playlist.title}", f"{video_id}", f"{video_title}", f"{url}")
+        for id in video_ids:
+            if video_id == id[0]:
+                logging.info(f"{video_id} found, checking next id")
+                break
+        else:
+            video_title = yt.title
 
-        mysql_cursor.execute(qry, val)
+            # change below code, check and replace for all special characters
 
-        connect_database.db.commit()
+            video_title = re.sub('[^a-zA-Z0-9\n\.]', '', video_title)
 
-        downloader()
+            print(video_title)
 
-        audio_video_merger()
+            # temp_video = yt.streams.filter(adaptive=True, file_extension="mp4",type="audio", abr="128kbps")
+            # temp_video = yt.streams.filter(adaptive=True, file_extension="mp4",res="1080p",type="video")
+
+            downloader()
+
+            audio_video_merger(playlist.title)
+
+            # Creating an entry of the video downloaded
+
+            qry = "INSERT INTO youtube_urls (playlist_name, video_id, video_name, video_url) VALUES (%s, %s, %s, %s)"
+            val = (f"{playlist.title}", f"{video_id}", f"{video_title}", f"{url}")
+
+            mysql_cursor.execute(qry, val)
+
+            connect_database.db.commit()
+            
 
         
 
