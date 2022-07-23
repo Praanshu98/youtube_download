@@ -11,6 +11,6 @@ else
     source /home/praanshu/anaconda3/bin/activate youtube &&
     cd /home/praanshu/yt_downloader/ && python src/playlist_download.py
     rm -rf /home/praanshu/yt_downloader/script_running.txt
-    echo "$File deleted"
+    echo "$FILE deleted"
 fi
 
