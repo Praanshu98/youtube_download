@@ -5,11 +5,12 @@ if [ -f "$FILE" ]; then
     echo "$FILE exists."
     echo "Script is running"
 else 
-    echo "$FILE does not exist."
+    echo "$FILE does not exist, creating one now"
+    touch /home/praanshu/yt_downloader/script_running.txt
     echo " Starting Script "
     source /home/praanshu/anaconda3/bin/activate youtube &&
     cd /home/praanshu/yt_downloader/ && python src/playlist_download.py
-    rm /home/praanshu/yt_downloader/script_running.txt
+    rm -rf /home/praanshu/yt_downloader/script_running.txt
     echo "$File deleted"
 fi
 
